@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom'; // Or MemoryRouter for testing
 
-import LoginPage from '../features/login/LoginPage';
+import LoginPage from '../LoginPage';
 
 describe('Login Component', () => {
   test('renders login form', () => {
