@@ -10,7 +10,7 @@ const CommentsList = ({ postId }) => {
     useEffect(() => {
         if (postId)
         {
-            dispatch(fetchCommentsForPost(postId));
+           // dispatch(fetchCommentsForPost(postId));
         }
     }, [postId, dispatch]);
 

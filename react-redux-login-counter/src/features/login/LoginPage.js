@@ -30,15 +30,17 @@ const LoginPage = () => {
 
   return (
     <form onSubmit={handleLogin}>
+      <label htmlFor="email">Email</label>
       <input
-        type="email"
-        value={email}
+        type="email" 
+        value={email} id="email" 
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
       />
+      <label htmlFor="password">Password</label>
       <input
         type="password"
-        value={password}
+        value={password} id="password" 
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
       />

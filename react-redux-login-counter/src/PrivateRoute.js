@@ -13,9 +13,12 @@ const PrivateRoute = ({ children }) => {
             setIsLoading(false);
         });
 
+        //console.log(unsubscribe); // Add this line to check the return value
+
         // Cleanup subscription on unmount
-        return () => unsubscribe();
+        return () => unsubscribe && unsubscribe();
     }, []);
+
 
     if (isLoading)
     {

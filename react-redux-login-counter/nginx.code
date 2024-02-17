@@ -1,0 +1,139 @@
+server {
+    listen 80;
+    server_name uinvoice.codefusion.lk;
+    root /home/ubuntu/uinvoice/invoice-module/public/;
+
+        #root /var/www/html;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+
+        index index.php index.html index.htm;
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+
+
+     location /phpmyadmin {
+        alias /usr/share/phpmyadmin;
+        try_files $uri $uri/ =404;
+
+        location ~ ^/phpmyadmin/(.+\.php)$ {
+            try_files $uri =404;
+            fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            include fastcgi_params;
+            include snippets/fastcgi-php.conf;
+        }
+
+        location ~* ^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
+            root /usr/share/;
+        }
+    }
+
+    location /phpMyAdmin {
+        rewrite ^/* /phpmyadmin last;
+    }
+
+}
+
+
+
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.php index.html index.htm index.nginx-debian.html;
+
+    server_name electronics.codefusion.lk;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    location /election-api {
+        proxy_pass http://localhost:3005;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    location /uinvoice {
+        alias /home/ubuntu/uinvoice/invoice-module/public;
+        try_files $uri $uri/ /uinvoice/index.php?$query_string;
+
+        location ~ \.php$ {
+            include snippets/fastcgi-php.conf;
+            fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+            fastcgi_param SCRIPT_FILENAME $request_filename;
+            include fastcgi_params;
+        }
+    }
+
+    location /test {
+        alias /home/ubuntu/test_uinvoice/invoice-module/public;
+        try_files $uri $uri/ /test/index.php?$query_string;
+
+        location ~ \.php$ {
+            include snippets/fastcgi-php.conf;
+            fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+            fastcgi_param SCRIPT_FILENAME $request_filename;
+            include fastcgi_params;
+        }
+    }
+
+    location /phpmyadmin {
+        alias /usr/share/phpmyadmin;
+        try_files $uri $uri/ =404;
+
+        location ~ ^/phpmyadmin/(.+\.php)$ {
+            try_files $uri =404;
+            fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            include fastcgi_params;
+            include snippets/fastcgi-php.conf;
+        }
+
+        location ~* ^/phpmyadmin/(.+\.(jpg|jpeg|gif|css|png|js|ico|html|xml|txt))$ {
+            root /usr/share/;
+        }
+    }
+
+    location /phpMyAdmin {
+        rewrite ^/* /phpmyadmin last;
+    }
+}
+
+
+
+
+
