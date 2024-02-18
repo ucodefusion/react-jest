@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
@@ -20,10 +20,8 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      working-directory: ./react-redux-login-counter # Adjusted to your project's path
 
     - name: Run Jest Tests
       run: npm test
-      env:
-        CI: true
-
- 
+      working-directory: ./react-redux-login-counter # Adjusted to your project's path
