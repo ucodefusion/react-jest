@@ -2,39 +2,61 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-    - name: Install dependencies
-      run: npm install
-      working-directory: ./react-redux-login-counter # Adjusted to your project's path
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./react-redux-login-counter # Adjusted to your project's path
 
-    - name: Run Jest Tests
-      run: npm test
-      working-directory: ./react-redux-login-counter # Adjusted to your project's path
+      - name: Run Jest Tests
+        run: npm test
+        working-directory: ./react-redux-login-counter # Adjusted to your project's path
 
-    
-    - name: Deploy to AWS Ubuntu Server
-      if: success()
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd /home/ubuntu/html/react-jest/react-redux-login-counter/
+      # Deployment steps start here
+      - name: Establish SSH Connection
+        if: success()
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "SSH connection established."
 
-          git pull origin main
+      - name: Pull Latest Changes from Main
+        if: success()
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/ubuntu/html/react-jest/react-redux-login-counter/
+            git pull origin main
+
+      - name: Restart Server (Optional)
+        if: success()
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Your server restart command here
+            # Example for a Node.js project (adjust as necessary):
+            # pm2 restart all
+            echo "Server restarted successfully."
