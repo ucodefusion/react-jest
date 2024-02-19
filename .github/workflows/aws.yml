@@ -7,9 +7,24 @@ on:
     branches: [main]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./react-redux-login-counter
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -27,7 +42,7 @@ jobs:
         working-directory: ./react-redux-login-counter
 
   deploy:
-    needs: build-and-test
+    needs: [build, test]
     runs-on: ubuntu-latest
     steps:
       - name: Establish SSH Connection and Deploy
