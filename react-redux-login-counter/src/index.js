@@ -3,15 +3,16 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import './index.css'; 
 import { store } from './store'; // Adjust the import path to where your store is defined
-
+import MainLayout from './components/MainLayout';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals from './reportWebVitals'; 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <MainLayout>   <App /></MainLayout>
+   
     </Provider>
   </React.StrictMode>
 );
