@@ -108,5 +108,13 @@ jobs:
             fi
             
             npm install
+
+            # Build the project
+            if ! npm run build; then
+                echo "Build failed. Stopping the deployment process."
+                exit 1
+            fi
+            
+
             echo "Deployment and server restart (if applicable) completed successfully."
 
