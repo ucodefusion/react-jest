@@ -1,4 +1,4 @@
-name: CI
+name: Continuous Integration Workflow
 
 on:
   push:
@@ -17,67 +17,47 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
         working-directory: ./react-redux-login-counter
 
-
-  test-counter:
-      needs: build
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - name: Setup Node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: '20'
-        - name: Run Counter Test
-          run: npm run test -- react-jest/react-redux-login-counter/src/features/counter/__tests__/Counter.test.js
-          working-directory: ./react-redux-login-counter
-  
-  test-login:
+  test:
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - test-name: "Counter Test"
+            test-path: "src/features/counter/__tests__/Counter.test.js"
+          - test-name: "Login Test"
+            test-path: "src/features/login/__tests__/Login.test.js"
+          - test-name: "Post Test"
+            test-path: "src/features/posts/__tests__/Post.test.js"
+          - test-name: "PostDetail Test"
+            test-path: "src/features/posts/__tests__/PostDetail.test.js"
     steps:
       - uses: actions/checkout@v3
+      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-      - name: Run Login Test
-        run: npm run test -- react-jest/react-redux-login-counter/src/features/login/__tests__/Login.test.js
+
+      - name: Install dependencies (cache hit)
+        run: echo "Dependencies should be cached"
+
+      - name: Run ${{ matrix.test-name }}
+        run: npm run test -- ${{ matrix.test-path }}
         working-directory: ./react-redux-login-counter
 
-  test-post:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      - name: Run Post Test
-        run: npm run test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/Post.test.js
-        working-directory: ./react-redux-login-counter
-
-  test-post-detail:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      - name: Run PostDetail Test
-        run: npm run test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/PostDetail.test.js
-        working-directory: ./react-redux-login-counter
   deploy:
-    needs: [test-post-detail]
+    needs: test
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+
       - name: Establish SSH Connection and Deploy
         uses: appleboy/ssh-action@master
         with:
@@ -88,7 +68,4 @@ jobs:
             echo "SSH connection established."
             cd /home/ubuntu/html/react-jest/react-redux-login-counter/
             git pull origin main
-            # pm2 restart all
-            echo "Deployment and server restart (if applicable) completed successfully."
-
-  
+            echo "Deployment completed successfully."
