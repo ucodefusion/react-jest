@@ -100,6 +100,13 @@ jobs:
           script: |
             echo "SSH connection established."
             cd /home/ubuntu/html/react-jest/react-redux-login-counter/
-            git pull origin main
+            
+            # Attempt to pull from origin and check for errors
+            if ! git pull origin main; then
+                echo "Error occurred during 'git pull'. Stopping the deployment process."
+                exit 1
+            fi
+            
             npm install
             echo "Deployment and server restart (if applicable) completed successfully."
+
