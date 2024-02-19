@@ -37,12 +37,24 @@ jobs:
         run: npm install
         working-directory: ./react-redux-login-counter
 
-      - name: Run Jest Tests
-        run: npm test
+      - name: Run Counter Test
+        run: npm run test -- react-jest/react-redux-login-counter/src/features/counter/__tests__/Counter.test.js
+        working-directory: ./react-redux-login-counter
+
+      - name: Run Login Test
+        run: npm run test -- react-jest/react-redux-login-counter/src/features/login/__tests__/Login.test.js
+        working-directory: ./react-redux-login-counter
+
+      - name: Run Post Test
+        run: npm run test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/Post.test.js
+        working-directory: ./react-redux-login-counter
+
+      - name: Run PostDetail Test
+        run: npm run test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/PostDetail.test.js
         working-directory: ./react-redux-login-counter
 
   deploy:
-    needs: [build, test]
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - name: Establish SSH Connection and Deploy
