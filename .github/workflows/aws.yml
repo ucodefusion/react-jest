@@ -20,18 +20,17 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./react-redux-login-counter # Adjusted to your project's path
+        working-directory: ./react-redux-login-counter
 
       - name: Run Jest Tests
         run: npm test
-        working-directory: ./react-redux-login-counter # Adjusted to your project's path
+        working-directory: ./react-redux-login-counter
 
-  server:
-    runs-on: ubuntu-SSH
-     steps:
-      # Deployment steps start here
-      - name: Establish SSH Connection
-        if: success()
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Establish SSH Connection and Deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -39,31 +38,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "SSH connection established."
-  server:
-    runs-on: git-pull
-     steps:
-      - name: Pull Latest Changes from Main
-        if: success()
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
             cd /home/ubuntu/html/react-jest/react-redux-login-counter/
             git pull origin main
-  server:
-    runs-on: restart
-     steps:
-      - name: Restart Server (Optional)
-        if: success()
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            # Your server restart command here
-            # Example for a Node.js project (adjust as necessary):
+            # Your server restart command here (uncomment or modify as necessary)
             # pm2 restart all
-            echo "Server restarted successfully."
+            echo "Deployment and server restart (if applicable) completed successfully."
