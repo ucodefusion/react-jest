@@ -26,6 +26,9 @@ jobs:
         run: npm test
         working-directory: ./react-redux-login-counter # Adjusted to your project's path
 
+  server:
+    runs-on: ubuntu-SSH
+     steps:
       # Deployment steps start here
       - name: Establish SSH Connection
         if: success()
@@ -36,7 +39,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "SSH connection established."
-
+  server:
+    runs-on: git-pull
+     steps:
       - name: Pull Latest Changes from Main
         if: success()
         uses: appleboy/ssh-action@master
@@ -47,7 +52,9 @@ jobs:
           script: |
             cd /home/ubuntu/html/react-jest/react-redux-login-counter/
             git pull origin main
-
+  server:
+    runs-on: restart
+     steps:
       - name: Restart Server (Optional)
         if: success()
         uses: appleboy/ssh-action@master
