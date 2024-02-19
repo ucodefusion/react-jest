@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +23,7 @@ jobs:
         working-directory: ./react-redux-login-counter
 
   test:
-    needs: build
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -33,24 +33,26 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./react-redux-login-counter
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        with:
+          path: ./react-redux-login-counter/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run Counter Test
-        run: npm run test -- react-jest/react-redux-login-counter/src/features/counter/__tests__/Counter.test.js
+        run: npm test -- react-jest/react-redux-login-counter/src/features/counter/__tests__/Counter.test.js
         working-directory: ./react-redux-login-counter
 
       - name: Run Login Test
-        run: npm run test -- react-jest/react-redux-login-counter/src/features/login/__tests__/Login.test.js
+        run: npm test -- react-jest/react-redux-login-counter/src/features/login/__tests__/Login.test.js
         working-directory: ./react-redux-login-counter
 
       - name: Run Post Test
-        run: npm run test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/Post.test.js
+        run: npm test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/Post.test.js
         working-directory: ./react-redux-login-counter
 
       - name: Run PostDetail Test
-        run: npm run test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/PostDetail.test.js
+        run: npm test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/PostDetail.test.js
         working-directory: ./react-redux-login-counter
 
   deploy:
