@@ -7,56 +7,72 @@ on:
     branches: [main]
 
 jobs:
-  setup:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-
       - name: Install dependencies
         run: npm install
         working-directory: ./react-redux-login-counter
 
-  test:
-    needs: setup
+  test-counter:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-
-      - name: Cache Node Modules
-        uses: actions/cache@v3
-        with:
-          path: ./react-redux-login-counter/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-
       - name: Run Counter Test
-        run: npm test -- react-jest/react-redux-login-counter/src/features/counter/__tests__/Counter.test.js
+        run: npm run test -- react-jest/react-redux-login-counter/src/features/counter/__tests__/Counter.test.js
         working-directory: ./react-redux-login-counter
 
+  test-login:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
       - name: Run Login Test
-        run: npm test -- react-jest/react-redux-login-counter/src/features/login/__tests__/Login.test.js
+        run: npm run test -- react-jest/react-redux-login-counter/src/features/login/__tests__/Login.test.js
         working-directory: ./react-redux-login-counter
 
+  test-post:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
       - name: Run Post Test
-        run: npm test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/Post.test.js
+        run: npm run test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/Post.test.js
         working-directory: ./react-redux-login-counter
 
+  test-post-detail:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
       - name: Run PostDetail Test
-        run: npm test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/PostDetail.test.js
+        run: npm run test -- react-jest/react-redux-login-counter/src/features/posts/__tests__/PostDetail.test.js
         working-directory: ./react-redux-login-counter
 
   deploy:
-    needs: [test]
+    needs: [test-counter, test-login, test-post, test-post-detail]
     runs-on: ubuntu-latest
     steps:
       - name: Establish SSH Connection and Deploy
@@ -69,6 +85,5 @@ jobs:
             echo "SSH connection established."
             cd /home/ubuntu/html/react-jest/react-redux-login-counter/
             git pull origin main
-            # Your server restart command here (uncomment or modify as necessary)
             # pm2 restart all
             echo "Deployment and server restart (if applicable) completed successfully."
