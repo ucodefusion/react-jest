@@ -11,9 +11,10 @@ Before you begin, ensure you have met the following requirements:
 - You have a Windows/Linux/Mac machine.
 - You have read [the React documentation](https://reactjs.org/docs/getting-started.html).
 
-## Installing <Project_Name>
+## Installing react-jest-for-beginner
 
-To install <Project_Name>, follow these steps:
+
+To install react-jest-for-beginner, follow these steps:
 
 ### Clone the repository
 
@@ -25,8 +26,8 @@ Install dependencies
 npm install
 This will install all the necessary dependencies required for the project to run.
 
-Using <Project_Name>
-To use <Project_Name>, follow these steps:
+Using react-jest-for-beginner
+To use react-jest-for-beginner, follow these steps:
 
 Starting the Development Server
  
@@ -43,13 +44,13 @@ Running Tests
 npm test
 This will run the Jest test runner in the interactive watch mode. It will execute any tests you have written in the __tests__ directories.
 
-Contributing to <Project_Name>
-To contribute to <Project_Name>, follow these steps:
+Contributing to react-jest-for-beginner
+To contribute to react-jest-for-beginner, follow these steps:
 
 Fork this repository.
 Create a branch: git checkout -b <branch_name>.
 Make your changes and commit them: git commit -m '<commit_message>'
-Push to the original branch: git push origin <Project_Name>/<location>
+Push to the original branch: git push origin react-jest-for-beginner/<location>
 Create the pull request.
 Alternatively, see the GitHub documentation on creating a pull request.
 
