@@ -21,8 +21,7 @@ To install <Project_Name>, follow these steps:
 git clone git@github.com:ucodefusion/react-jest.git
 cd react-jest
 Install dependencies
-bash
-Copy code
+ 
 npm install
 This will install all the necessary dependencies required for the project to run.
 
@@ -30,20 +29,17 @@ Using <Project_Name>
 To use <Project_Name>, follow these steps:
 
 Starting the Development Server
-bash
-Copy code
+ 
 npm start
 This will start the development server on http://localhost:3000. Open your browser and navigate to this address to view the application.
 
 Building the Application
-bash
-Copy code
+ 
 npm run build
 This command will create a build directory with a production build of your app. You can deploy this build to any static hosting service or server.
 
 Running Tests
-bash
-Copy code
+ 
 npm test
 This will run the Jest test runner in the interactive watch mode. It will execute any tests you have written in the __tests__ directories.
 
@@ -57,11 +53,6 @@ Push to the original branch: git push origin <Project_Name>/<location>
 Create the pull request.
 Alternatively, see the GitHub documentation on creating a pull request.
 
-Contributors
-Thanks to the following people who have contributed to this project:
-
-@ucodefusion 📖
-You should add additional contributors here as they contribute.
-
+ 
 Contact
 If you want to contact me, you can reach me at linked in.
